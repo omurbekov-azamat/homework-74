@@ -8,23 +8,21 @@ const port = 8000;
 app.use(express.json());
 
 app.get('/messages', (req, res) => {
-  res.send('all messages');
+  const messages =  fileDb.getItems();
+  res.send(messages);
 });
 
-app.post('/messages', async (req, res) => {
+app.post('/messages', (req, res) => {
   const message: GotMessageWithDate = {
     message: req.body.message,
     date: new Date().toISOString(),
   };
-
-  const newMessage = await fileDb.addItem(message);
-
+  const newMessage =  fileDb.addItem(message);
   res.send(newMessage);
 });
 
-
 const run = async () => {
-
+  fileDb.init();
   app.listen(port, () => {
     console.log('we are on live on ' + port);
   });
